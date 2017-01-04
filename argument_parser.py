@@ -12,7 +12,7 @@ def parse_args():
     parser.add_argument('AWS_ACCESS_KEY_ID', help='Access key to access Amazon Glacier')
     parser.add_argument('AWS_SECRET_ACCESS_KEY', help='Secret key to access Amazon Glacier')
     parser.add_argument('AWS_DEFAULT_REGION', help='Region to access Amazon Glacier')
-    parser.add_argument('zip_password', help='Password to use to encrypt zip packages')
+    parser.add_argument('encryption_password', help='Password to use to encrypt zip packages')
     parser.add_argument('input_directory', help='Input directory')
     parser.add_argument('months_range', type=__months_arg_checker, help='Months range, e.g. 1-6 or 7-12')
     return parser.parse_args()
