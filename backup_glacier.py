@@ -1,11 +1,15 @@
-from argument_parser import parse_args
+from argument_parser import ArgumentParser
 
 
 def main():
-    args = parse_args()
+    args = ArgumentParser()
     print 'Given arguments: {}'.format(args)
 
     # list directories => paths list
+    input_dir = args.input_dir()
+    months_range = args.months_range()
+
+
 
     # zip each directory 
 
