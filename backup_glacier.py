@@ -7,7 +7,7 @@ def main():
 
     # list directories => paths list
     input_dir = args.input_dir()
-    months_range = args.months_range()
+    # months_range = args.months_range()
 
 
 
