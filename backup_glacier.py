@@ -1,5 +1,4 @@
-import os
-from zipfile import ZipFile
+import zipper
 
 import directory_resolver
 from argument_parser import ArgumentParser
@@ -14,15 +13,7 @@ def main():
     print "Directories to backup:".format(dirs_to_backup)
 
     # zip each directory
-    for dir_name in dirs_to_backup:
-        path_to_backup = os.path.join(input_dir, dir_name)
-        print "About to zip directory: {}".format(path_to_backup)
-        zip_file_name = "{}.zip".format(dir_name)
-        with ZipFile(zip_file_name, 'w') as zip_file:
-            for root, dirs, files in os.walk(path_to_backup):
-                for file in files:
-                    zip_file.write(os.path.join(root, file))
-        print "Directory zipped: {}".format(zip_file_name)
+    zips = zipper.zip_directories(input_dir, dirs_to_backup)
 
     # encrypt each zip
 
