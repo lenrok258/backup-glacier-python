@@ -7,8 +7,7 @@ def list_directories(input_dir, months_range):
     months_regexp = __prepare_months_regexp(months_list)
     dirs = __list_all_dirs_in_input_dir(input_dir)
     dirs_in_range = __filter_dirs_with_regexp(dirs, months_regexp)
-    paths_in_range = map(lambda dir_name: input_dir + "/" + dir_name, dirs_in_range)
-    return paths_in_range
+    return dirs_in_range
 
 
 def __filter_dirs_with_regexp(dirs, months_regexp):
@@ -18,7 +17,7 @@ def __filter_dirs_with_regexp(dirs, months_regexp):
 
 def __list_all_dirs_in_input_dir(input_dir):
     paths = os.listdir(input_dir)
-    dirs = filter(lambda path: os.path.isdir(input_dir + '/' + path), paths)
+    dirs = filter(lambda path: os.path.isdir(os.path.join(input_dir, path)), paths)
     return dirs
 
 

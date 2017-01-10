@@ -2,8 +2,9 @@
 
 import sys
 
+
 # Print iterations progress
-def printProgress (iteration, total, prefix = '', suffix = '', decimals = 1, barLength = 100, fill = '█'):
+def printProgress(iteration, total, prefix='', suffix='', decimals=1, barLength=100, fill='█'):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -22,25 +23,3 @@ def printProgress (iteration, total, prefix = '', suffix = '', decimals = 1, bar
         sys.stdout.write('\n')
     sys.stdout.flush()
 
-# 
-# Sample Usage
-# 
-
-from time import sleep
-
-# make a list
-items = list(range(0, 57))
-i = 0
-l = len(items)
-
-# Initial call to print 0% progress
-print 'Going to do very important stuff:'
-printProgress(i, l, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
-for item in items:
-    # Do stuff...
-    sleep(0.1)
-    # Update Progress Bar
-    i += 1
-    printProgress(i, l, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
-
-print 'Done, so proud.'
