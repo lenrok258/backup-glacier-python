@@ -12,6 +12,17 @@ def __derive_key_and_iv(password, salt, key_length, iv_length):
     return d[:key_length], d[key_length:key_length + iv_length]
 
 
+def encrypt_files(files_paths_list, password):
+    result_tuple_list = list()
+    for file_path in files_paths_list:
+        print "Encrypting {}".format(file_path)
+        file_path_enc = file_path + '_enc'
+        with open(file_path, 'rb') as in_file, open(file_path_enc, 'wb') as out_file:
+            encrypt(in_file, out_file, password)
+            result_tuple_list.append((file_path, file_path_enc))
+    return result_tuple_list
+
+
 def encrypt(in_file, out_file, password, key_length=32):
     bs = AES.block_size
     salt = Random.new().read(bs - len('Salted__'))
