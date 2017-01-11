@@ -14,6 +14,7 @@ def main():
     # Arguments
     input_dir = args.input_dir()
     months_range = args.months_range()
+    enc_pass = args.encryption_pass()
 
     # Directories to backup
     dirs_to_backup = directory_resolver.list_directories(input_dir, months_range)
@@ -23,9 +24,10 @@ def main():
     zips = zipper.zip_directories(input_dir, dirs_to_backup, OUTPUT_DIR)
 
     # Encrypt
-    encrypted_files = cypher.encrypt_files(zips, '28iiKd7Z0oo92w996A7IpSz98DF1D47y')
+    encrypted_files = cypher.encrypt_files(zips, enc_pass)
 
     # verify file (decrypt, compare checksum with zip before encryption)
+
 
     # upload each zip to Glacier
 
