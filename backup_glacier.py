@@ -25,6 +25,8 @@ def main():
     decrypted = aes.decrypt(encrypted)
     print decrypted
 
+    # verify file (decrypt, compare checksum with zip before encryption)
+
     # upload each zip to Glacier
 
     # mark (text file in directory) as 'backed-up'
