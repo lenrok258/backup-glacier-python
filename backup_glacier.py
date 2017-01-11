@@ -1,6 +1,6 @@
+import cypher
 import directory_resolver
 import zipper
-from Crypto.Cipher import AES
 from argument_parser import ArgumentParser
 
 
@@ -18,12 +18,11 @@ def main():
     zips = zipper.zip_directories(input_dir, dirs_to_backup)
 
     # encrypt each zip
-    IV = 16 * '\x00'
-    aes = AES.new("28iiKd7Z0oo92w996A7IpSz98DF1D47y", AES.MODE_CBC, IV)
-    encrypted = aes.encrypt("1234567890123456")
-    print encrypted
-    decrypted = aes.decrypt(encrypted)
-    print decrypted
+    for zip_file_path in zips:
+        print "Encrypting {}".format(zip_file_path)
+        with open(zip_file_path, 'rb') as in_file, open(zip_file_path + '_enc', 'wb') as out_file:
+            cypher.encrypt(in_file, out_file, '28iiKd7Z0oo92w996A7IpSz98DF1D47y')
+
 
     # verify file (decrypt, compare checksum with zip before encryption)
 

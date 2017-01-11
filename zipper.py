@@ -13,7 +13,7 @@ def zip_directories(dirs_path, dirs_names_list):
 
 
 def __compute_zip_name(dir_name):
-    zip_file_name = "{}.zip".format(dir_name)
+    zip_file_name = "out/{}.zip".format(dir_name)
     return zip_file_name
 
 

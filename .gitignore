@@ -2,3 +2,5 @@
 *.pyc
 .idea/
 *.zip
+out/
+!out/.gitkeep
