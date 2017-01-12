@@ -18,12 +18,20 @@ def encrypt_files(files_paths_list, password):
         print "Encrypting {}".format(file_path)
         file_path_enc = file_path + '_enc'
         with open(file_path, 'rb') as in_file, open(file_path_enc, 'wb') as out_file:
-            encrypt(in_file, out_file, password)
+            __encrypt(in_file, out_file, password)
             result_tuple_list.append((file_path, file_path_enc))
     return result_tuple_list
 
 
-def encrypt(in_file, out_file, password, key_length=32):
+def decrypt_file(file_path, password):
+    print "Decrypting {}".format(file_path)
+    file_path_dec = file_path + '_dec'
+    with open(file_path, 'rb') as in_file, open(file_path_dec, 'wb') as out_file:
+        __decrypt(in_file, out_file, password)
+    return file_path_dec
+
+
+def __encrypt(in_file, out_file, password, key_length=32):
     bs = AES.block_size
     salt = Random.new().read(bs - len('Salted__'))
     key, iv = __derive_key_and_iv(password, salt, key_length, bs)
@@ -39,7 +47,7 @@ def encrypt(in_file, out_file, password, key_length=32):
         out_file.write(cipher.encrypt(chunk))
 
 
-def decrypt(in_file, out_file, password, key_length=32):
+def __decrypt(in_file, out_file, password, key_length=32):
     bs = AES.block_size
     salt = in_file.read(bs)[len('Salted__'):]
     key, iv = __derive_key_and_iv(password, salt, key_length, bs)
