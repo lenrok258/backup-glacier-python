@@ -26,10 +26,10 @@ def main():
     dirs_to_backup = directory_resolver.list_directories(input_dir, months_range)
     print "Directories to backup:".format(dirs_to_backup)
 
-    # Zip
+    # Zip (=> list of zipped files paths)
     zips = zipper.zip_directories(input_dir, dirs_to_backup, OUTPUT_DIR)
 
-    # Encrypt
+    # Encrypt (=> tuple(original_file_path, enc_file_path)
     encrypted_files_tuples = cypher.encrypt_files(zips, enc_pass)
 
     # Verify encrypted file (decrypt, compare checksum with zip before encryption)
