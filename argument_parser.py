@@ -5,7 +5,8 @@ import re
 class ArgumentName:
     AWS_ACCESS_KEY_ID = 'AWS_ACCESS_KEY_ID'
     AWS_SECRET_ACCESS_KEY = 'AWS_SECRET_ACCESS_KEY'
-    AWS_DEFAULT_REGION = 'AWS_DEFAULT_REGION'
+    AWS_REGION = 'AWS_REGION'
+    AWS_GLACIER_VAULT = 'AWS_GLACIER_VAULT'
     encryption_password = 'encryption_password'
     input_directory = 'input_directory'
     months_range = 'months_range'
@@ -16,7 +17,8 @@ class ArgumentParser:
         parser = argparse.ArgumentParser(description='Backup media files to AWS Glacier')
         parser.add_argument(ArgumentName.AWS_ACCESS_KEY_ID, help='Access key to access Amazon Glacier')
         parser.add_argument(ArgumentName.AWS_SECRET_ACCESS_KEY, help='Secret key to access Amazon Glacier')
-        parser.add_argument(ArgumentName.AWS_DEFAULT_REGION, help='Region to access Amazon Glacier')
+        parser.add_argument(ArgumentName.AWS_REGION, help='Region to access Amazon Glacier')
+        parser.add_argument(ArgumentName.AWS_GLACIER_VAULT, help='Amazon Glacier vault name')
         parser.add_argument(ArgumentName.encryption_password, help='Password to use to encrypt zip packages')
         parser.add_argument(ArgumentName.input_directory, help='Input directory')
         parser.add_argument(ArgumentName.months_range, type=ArgumentParser.months_arg_checker,
@@ -30,7 +32,10 @@ class ArgumentParser:
         return getattr(self.args, ArgumentName.AWS_SECRET_ACCESS_KEY)
 
     def aws_region(self):
-        return getattr(self.args, ArgumentName.AWS_DEFAULT_REGION)
+        return getattr(self.args, ArgumentName.AWS_REGION)
+
+    def aws_glacier_name(self):
+        return getattr(self.args, ArgumentName.AWS_GLACIER_VAULT)
 
     def encryption_pass(self):
         return getattr(self.args, ArgumentName.encryption_password)

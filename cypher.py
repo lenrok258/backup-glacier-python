@@ -15,7 +15,7 @@ def __derive_key_and_iv(password, salt, key_length, iv_length):
 def encrypt_files(files_paths_list, password):
     result_tuple_list = list()
     for file_path in files_paths_list:
-        print "Encrypting {}".format(file_path)
+        print "Encrypting [{}]".format(file_path)
         file_path_enc = file_path + '_enc'
         with open(file_path, 'rb') as in_file, open(file_path_enc, 'wb') as out_file:
             __encrypt(in_file, out_file, password)
@@ -24,7 +24,7 @@ def encrypt_files(files_paths_list, password):
 
 
 def decrypt_file(file_path, password):
-    print "Decrypting {}".format(file_path)
+    print "Decrypting [{}]".format(file_path)
     file_path_dec = file_path + '_dec'
     with open(file_path, 'rb') as in_file, open(file_path_dec, 'wb') as out_file:
         __decrypt(in_file, out_file, password)

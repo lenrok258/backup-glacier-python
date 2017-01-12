@@ -1,3 +1,4 @@
+import aws_glacier
 import cypher
 import directory_resolver
 import file_hash
@@ -16,6 +17,10 @@ def main():
     input_dir = args.input_dir()
     months_range = args.months_range()
     enc_pass = args.encryption_pass()
+    aws_key = args.aws_key_id()
+    aws_secret = args.aws_secret()
+    aws_region = args.aws_region()
+    aws_glacier_vault = args.aws_glacier_name()
 
     # Directories to backup
     dirs_to_backup = directory_resolver.list_directories(input_dir, months_range)
@@ -25,29 +30,37 @@ def main():
     zips = zipper.zip_directories(input_dir, dirs_to_backup, OUTPUT_DIR)
 
     # Encrypt
-    encrypted_files = cypher.encrypt_files(zips, enc_pass)
+    encrypted_files_tuples = cypher.encrypt_files(zips, enc_pass)
 
-    # verify file (decrypt, compare checksum with zip before encryption)
-    __verify_encrypted_packages(encrypted_files, enc_pass)
+    # Verify encrypted file (decrypt, compare checksum with zip before encryption)
+    __verify_encrypted_packages(encrypted_files_tuples, enc_pass)
 
-    # upload each zip to Glacier
+    # Upload each encrypted zip to Glacier
+    aws_glacier.upload_files(__get_enc_files(encrypted_files_tuples), aws_key, aws_secret, aws_region, aws_glacier_vault)
 
     # mark (text file in directory) as 'backed-up'
 
     # clean up (delete encrypted package)
 
 
-def __verify_encrypted_packages(encrypted_files, password):
-    for file_tuple in encrypted_files:
-        original_file_path = file_tuple[0]
-        enc_file_path = file_tuple[1]
-        dec_file_path = cypher.decrypt_file(enc_file_path, password)
+def __verify_encrypted_packages(encrypted_files_tuples, password):
+    for files_tuple in encrypted_files_tuples:
+        original_file_path = files_tuple[0]
+        enc_file_path = files_tuple[1]
+        print "Verifying file [{}]".format(enc_file_path)
 
+        dec_file_path = cypher.decrypt_file(enc_file_path, password)
         original_file_hash = file_hash.hash_file(original_file_path)
         dec_file_hash = file_hash.hash_file(dec_file_path)
 
         if original_file_hash != dec_file_hash:
-            raise Exception('Verification for file=<<{}>> failed!'.format(original_file_path))
+            raise Exception('Verification of file=[{}] failed!'.format(original_file_path))
+
+        print "File [{}] verified".format(enc_file_path)
+
+
+def __get_enc_files(encrypted_files_tuples):
+    return map(lambda tuple: tuple[1], encrypted_files_tuples)
 
 
 if __name__ == '__main__':
