@@ -38,9 +38,9 @@ def main():
     # Upload each encrypted zip to Glacier
     aws_glacier.upload_files(__get_enc_files(encrypted_files_tuples), aws_key, aws_secret, aws_region, aws_glacier_vault)
 
-    # mark (text file in directory) as 'backed-up'
+    # Put text file to source directory with Glacier Archive ID for further reference
 
-    # clean up (delete encrypted package)
+    # clean up (delete OUTPUT_DIR content)
 
 
 def __verify_encrypted_packages(encrypted_files_tuples, password):

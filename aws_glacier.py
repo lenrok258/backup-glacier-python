@@ -1,3 +1,5 @@
+import os
+
 import boto3
 
 
@@ -6,9 +8,9 @@ def upload_files(file_paths_list, aws_key, aws_secret, aws_region, aws_glacier_v
     __set_retrieval_policy_to_free_tier_only(client)
 
     for file_path in file_paths_list:
-        print "About to upload file [{}]".format(file_path)
-
-    print client.list_vaults()
+        with open(file_path, 'rb') as file:
+            print "About to upload file [{}]".format(file.name)
+            __upload_file(client, file, aws_glacier_vault)
 
 
 def __create_glacier_client(aws_key, aws_region, aws_secret):
@@ -27,3 +29,9 @@ def __set_retrieval_policy_to_free_tier_only(client):
             },
         ]
     })
+
+
+def __upload_file(client, file, aws_glacier_vault):
+    client.upload_archive(vaultName=aws_glacier_vault,
+                          archiveDescription=os.path.basename(file.name),
+                          body=file)
