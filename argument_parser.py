@@ -18,8 +18,6 @@ class ArgumentName:
 
 class ArgumentParser:
     def __init__(self):
-        self.__ask_for_secrets()
-
         parser = argparse.ArgumentParser(description='Backup media files to AWS Glacier')
         parser.add_argument(ArgumentName.AWS_REGION, help='Region to access Amazon Glacier')
         parser.add_argument(ArgumentName.AWS_GLACIER_VAULT, help='Amazon Glacier vault name')
@@ -27,6 +25,7 @@ class ArgumentParser:
         parser.add_argument(ArgumentName.months_range, type=ArgumentParser.months_arg_checker,
                             help='Months range, e.g. 1-6 or 7-12')
         self.args = parser.parse_args()
+        self.__ask_for_secrets()
 
     def __ask_for_secrets(self):
         aws_key = getpass.getpass(ArgumentName.AWS_ACCESS_KEY_ID + ": ")
