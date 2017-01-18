@@ -2,12 +2,18 @@ import os
 from zipfile import ZipFile
 
 
-def zip_directories(dirs_path, dirs_names_list, output_dir):
+class ArchiveZip:
+    def __init__(self, dir_path, zip_path):
+        self.dir_path = dir_path
+        self.zip_path = zip_path
+
+
+def zip_directories(archive_directory_list, output_dir):
     zips = list()
-    for dir_name in dirs_names_list:
-        path_to_backup = os.path.join(dirs_path, dir_name)
-        zip_file_path = __compute_zip_path(dir_name, output_dir)
-        zips.append(zip_file_path)
+    for archive_directory in archive_directory_list:
+        path_to_backup = archive_directory.dir_path
+        zip_file_path = __compute_zip_path(archive_directory.dir_name, output_dir)
+        zips.append(ArchiveZip(archive_directory.dir_path, zip_file_path))
         __create_zip(path_to_backup, zip_file_path)
     return zips
 

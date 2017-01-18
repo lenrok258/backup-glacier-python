@@ -22,31 +22,31 @@ def main():
     aws_region = args.aws_region()
     aws_glacier_vault = args.aws_glacier_name()
 
-    # Directories to backup
-    dirs_to_backup = directory_resolver.list_directories(input_dir, months_range)
-    print "Directories to backup:".format(dirs_to_backup)
+    # Directories to backup (=> list of ArchiveDirectory)
+    archive_directory_list = directory_resolver.list_directories(input_dir, months_range)
+    print "Directories to backup: {}".format(archive_directory_list)
 
-    # Zip (=> list of zipped files paths)
-    zips = zipper.zip_directories(input_dir, dirs_to_backup, OUTPUT_DIR)
+    # Zip (=> list of ArchiveZip)
+    archive_zip_list = zipper.zip_directories(archive_directory_list, OUTPUT_DIR)
 
-    # Encrypt (=> tuple(original_file_path, enc_file_path)
-    encrypted_files_tuples = cypher.encrypt_files(zips, enc_pass)
+    # Encrypt (=> list of ArchiveEnc)
+    archive_enc_list = cypher.encrypt_files(archive_zip_list, enc_pass)
 
     # Verify encrypted file (decrypt, compare checksum with zip before encryption)
-    __verify_encrypted_packages(encrypted_files_tuples, enc_pass)
+    __verify_encrypted_packages(archive_enc_list, enc_pass)
 
     # Upload each encrypted zip to Glacier
-    aws_glacier.upload_files(__get_enc_files(encrypted_files_tuples), aws_key, aws_secret, aws_region, aws_glacier_vault)
+    __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacier_vault)
 
     # Put text file to source directory with Glacier Archive ID for further reference
 
     # clean up (delete OUTPUT_DIR content)
 
 
-def __verify_encrypted_packages(encrypted_files_tuples, password):
-    for files_tuple in encrypted_files_tuples:
-        original_file_path = files_tuple[0]
-        enc_file_path = files_tuple[1]
+def __verify_encrypted_packages(archive_enc_list, password):
+    for archive_enc in archive_enc_list:
+        original_file_path = archive_enc.zip_path
+        enc_file_path = archive_enc.enc_path
         print "Verifying file [{}]".format(enc_file_path)
 
         dec_file_path = cypher.decrypt_file(enc_file_path, password)
@@ -59,8 +59,20 @@ def __verify_encrypted_packages(encrypted_files_tuples, password):
         print "File [{}] verified".format(enc_file_path)
 
 
-def __get_enc_files(encrypted_files_tuples):
-    return map(lambda tuple: tuple[1], encrypted_files_tuples)
+def __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacier_vault):
+    for archive_enc in archive_enc_list:
+        dir_path = archive_enc.dir_path
+        enc_path = archive_enc.enc_path
+
+        print "About to upload file [{}]".format(enc_path)
+        archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
+        print "File uploaded. Archive id = {}".format(archive_id)
+        print "About to put result file in directory {}".format(dir_path)
+        __mark_directory_as_completed(dir_path, archive_id)
+
+
+def __mark_directory_as_completed(dir_path, archive_id):
+    pass
 
 
 if __name__ == '__main__':
