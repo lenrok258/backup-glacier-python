@@ -1,4 +1,5 @@
-import aws_glacier
+import json
+
 import cypher
 import directory_resolver
 import file_hash
@@ -6,6 +7,7 @@ import zipper
 from argument_parser import ArgumentParser
 
 OUTPUT_DIR = 'out'
+RESULT_FILE_NAME = 'archive-info.json'
 
 
 def main():
@@ -62,17 +64,28 @@ def __verify_encrypted_packages(archive_enc_list, password):
 def __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacier_vault):
     for archive_enc in archive_enc_list:
         dir_path = archive_enc.dir_path
+        zip_path = archive_enc.zip_path
         enc_path = archive_enc.enc_path
 
         print "About to upload file [{}]".format(enc_path)
-        archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
+        # archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
+        archive_id = "TETS"
         print "File uploaded. Archive id = {}".format(archive_id)
         print "About to put result file in directory {}".format(dir_path)
-        __mark_directory_as_completed(dir_path, archive_id)
+        __mark_directory_as_completed(dir_path, zip_path, enc_path, archive_id)
 
 
-def __mark_directory_as_completed(dir_path, archive_id):
-    pass
+def __mark_directory_as_completed(dir_path, zip_path, enc_path, archive_id):
+    zip_hash = file_hash.hash_file(zip_path)
+    enc_hash = file_hash.hash_file(enc_path)
+    file_content = {
+        "dir_path": dir_path,
+        "zip_path": zip_path,
+        "enc_path": enc_path,
+        "zip_hash": zip_hash,
+        "enc_hash": enc_hash,
+        "aws_archive_id": archive_id}
+    print file_content
 
 
 if __name__ == '__main__':
