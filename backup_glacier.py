@@ -27,7 +27,7 @@ def main():
     aws_glacier_vault = args.aws_glacier_name()
 
     # Directories to backup (=> list of ArchiveDirectory)
-    archive_directory_list = directory_resolver.list_directories(input_dir, months_range)
+    archive_directory_list = directory_resolver.list_directories(input_dir, months_range, RESULT_FILE_NAME)
     print "Directories to backup: {}".format(archive_directory_list)
 
     # Zip (=> list of ArchiveZip)

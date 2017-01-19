@@ -18,13 +18,13 @@ class ArchiveDirectory:
         return self.dir_path
 
 
-def list_directories(input_dir, months_range):
+def list_directories(input_dir, months_range, archived_marker_file_name):
     months_list = __expand_months_list(months_range)
     months_regexp = __prepare_months_regexp(months_list)
     dirs = __list_all_dirs_in_input_dir(input_dir)
     dirs_in_range = __filter_dirs_with_regexp(dirs, months_regexp)
-    # TODO: Check if directory is marked as archived, exclude it and log warning
-    return prepare_result(input_dir, dirs_in_range)
+    dirs_to_backup = __filter_dirs_already_archived(input_dir, dirs_in_range, archived_marker_file_name)
+    return prepare_result(input_dir, dirs_to_backup)
 
 
 def __filter_dirs_with_regexp(dirs, months_regexp):
@@ -50,6 +50,18 @@ def __expand_months_list(months_range):
     range_end = range_split[1]
     months_range_list = range(int(range_start), int(range_end) + 1)
     return months_range_list
+
+
+def __filter_dirs_already_archived(input_dir, dirs_names, archived_marker_file_name):
+    dirs_to_backup = list()
+    for dir_name in dirs_names:
+        marker_file_path = os.path.join(input_dir, dir_name, archived_marker_file_name)
+        if os.path.isfile(marker_file_path):
+            print "Directory {} has already been archived. Skipping".format(dir_name)
+        else:
+            dirs_to_backup.append(dir_name)
+
+    return dirs_to_backup
 
 
 def prepare_result(input_dir, dirs_in_range):
