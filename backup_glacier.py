@@ -1,6 +1,8 @@
 import json
 import os
 
+import shutil
+
 import cypher
 import directory_resolver
 import file_hash
@@ -43,14 +45,14 @@ def main():
     # Upload each encrypted zip to Glacier
     __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacier_vault)
 
-    # Put text file to source directory with Glacier Archive ID for further reference
-
-    # clean up (delete OUTPUT_DIR content)
+    # clean up (delete output_directory)
+    __delete_output_dir(output_directory)
 
 
 def __prepare_output_directory(input_dir):
     output_directory = os.path.join(input_dir, OUTPUT_DIR_NAME)
-    os.mkdir(output_directory)
+    if not os.path.exists(output_directory):
+        os.mkdir(output_directory)
     return output_directory
 
 
@@ -102,6 +104,12 @@ def __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archiv
         json.dump(file_content, result_file, indent=4)
 
 
+def __delete_output_dir(output_directory):
+    print "Deleting output directory {}".format(output_directory)
+    shutil.rmtree(output_directory, ignore_errors=True)
+
+
 if __name__ == '__main__':
     main()
+
 1
