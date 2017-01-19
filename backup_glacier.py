@@ -1,8 +1,8 @@
 import json
 import os
-
 import shutil
 
+import aws_glacier
 import cypher
 import directory_resolver
 import file_hash
@@ -80,8 +80,7 @@ def __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacie
         enc_path = archive_enc.enc_path
 
         print "About to upload file [{}]".format(enc_path)
-        # archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
-        archive_id = "TETS"
+        archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
         print "File uploaded. Archive id = {}".format(archive_id)
         print "About to put result file in directory {}".format(dir_path)
         __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archive_id)
