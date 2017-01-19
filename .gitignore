@@ -2,8 +2,7 @@
 *.pyc
 .idea/
 *.zip
-out/
-!out/.gitkeep
-out-aws-archives-ids
+out-aws-archives-ids/
 !out-aws-archives-ids/.gitkeep
 aws-archive-info.json
+**/out/

@@ -7,7 +7,7 @@ import file_hash
 import zipper
 from argument_parser import ArgumentParser
 
-OUTPUT_DIR = 'out'
+OUTPUT_DIR_NAME = 'out'
 OUTPUT_DIR_AWS_ARCHIVES_IDS = 'out-aws-archives-ids'
 RESULT_FILE_NAME = 'aws-archive-info.json'
 
@@ -25,13 +25,14 @@ def main():
     aws_secret = args.aws_secret()
     aws_region = args.aws_region()
     aws_glacier_vault = args.aws_glacier_name()
+    output_directory = __prepare_output_directory(input_dir)
 
     # Directories to backup (=> list of ArchiveDirectory)
     archive_directory_list = directory_resolver.list_directories(input_dir, months_range, RESULT_FILE_NAME)
     print "Directories to backup: {}".format(archive_directory_list)
 
     # Zip (=> list of ArchiveZip)
-    archive_zip_list = zipper.zip_directories(archive_directory_list, OUTPUT_DIR)
+    archive_zip_list = zipper.zip_directories(archive_directory_list, output_directory)
 
     # Encrypt (=> list of ArchiveEnc)
     archive_enc_list = cypher.encrypt_files(archive_zip_list, enc_pass)
@@ -45,6 +46,12 @@ def main():
     # Put text file to source directory with Glacier Archive ID for further reference
 
     # clean up (delete OUTPUT_DIR content)
+
+
+def __prepare_output_directory(input_dir):
+    output_directory = os.path.join(input_dir, OUTPUT_DIR_NAME)
+    os.mkdir(output_directory)
+    return output_directory
 
 
 def __verify_encrypted_packages(archive_enc_list, password):
