@@ -5,7 +5,8 @@ from Crypto.Cipher import AES
 
 
 class ArchiveEnc:
-    def __init__(self, dir_path, zip_path, enc_path):
+    def __init__(self, dir_name, dir_path, zip_path, enc_path):
+        self.dir_name = dir_name
         self.dir_path = dir_path
         self.zip_path = zip_path
         self.enc_path = enc_path
@@ -26,7 +27,7 @@ def encrypt_files(archive_zip_list, password):
         file_path_enc = archive_zip.zip_path + '_enc'
         with open(archive_zip.zip_path, 'rb') as in_file, open(file_path_enc, 'wb') as out_file:
             __encrypt(in_file, out_file, password)
-            result_list.append(ArchiveEnc(archive_zip.dir_path, archive_zip.zip_path, file_path_enc))
+            result_list.append(ArchiveEnc(archive_zip.dir_name, archive_zip.dir_path, archive_zip.zip_path, file_path_enc))
     return result_list
 
 

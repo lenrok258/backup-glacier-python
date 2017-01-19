@@ -3,7 +3,8 @@ from zipfile import ZipFile
 
 
 class ArchiveZip:
-    def __init__(self, dir_path, zip_path):
+    def __init__(self, dir_name, dir_path, zip_path):
+        self.dir_name = dir_name
         self.dir_path = dir_path
         self.zip_path = zip_path
 
@@ -11,9 +12,11 @@ class ArchiveZip:
 def zip_directories(archive_directory_list, output_dir):
     zips = list()
     for archive_directory in archive_directory_list:
+        dir_name = archive_directory.dir_name
         path_to_backup = archive_directory.dir_path
-        zip_file_path = __compute_zip_path(archive_directory.dir_name, output_dir)
-        zips.append(ArchiveZip(archive_directory.dir_path, zip_file_path))
+
+        zip_file_path = __compute_zip_path(dir_name, output_dir)
+        zips.append(ArchiveZip(dir_name, path_to_backup, zip_file_path))
         __create_zip(path_to_backup, zip_file_path)
     return zips
 
