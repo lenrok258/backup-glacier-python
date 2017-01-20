@@ -11,7 +11,9 @@ def upload_file(file_path, aws_key, aws_secret, aws_region, aws_glacier_vault):
 
 
 def retrieve_archive(archive_id, aws_key, aws_secret, aws_region, aws_glacier_vault):
-    pass
+    resource = __create_glacier_resource(aws_key, aws_secret, aws_region)
+    archive = resource.Archive('-', aws_glacier_vault, archive_id)
+    print "JOB_ID: {}".format(archive.initiate_archive_retrieval())
 
 
 def __create_glacier_client(aws_key, aws_secret, aws_region):
@@ -22,9 +24,6 @@ def __create_glacier_client(aws_key, aws_secret, aws_region):
 
 
 def __create_glacier_resource(aws_key, aws_secret, aws_region):
-    # return boto_glacier.Layer2(aws_access_key_id=aws_key,
-    #                            aws_secret_access_key=aws_secret,
-    #                            region_name=aws_region)
     return boto3.resource('glacier',
                           aws_access_key_id=aws_key,
                           aws_secret_access_key=aws_secret,
@@ -46,3 +45,9 @@ def __upload_file(glacier_resource, file_path, aws_glacier_vault):
     description = os.path.basename(file_path)
     archive = vault.upload_archive(body=file_path, archiveDescription=description)
     return archive
+
+
+if __name__ == '__main__':
+    retrieve_archive(
+        ''
+    )

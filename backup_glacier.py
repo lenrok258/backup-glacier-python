@@ -96,6 +96,8 @@ def __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archiv
         "enc_path": enc_path,
         "zip_hash": zip_hash,
         "enc_hash": enc_hash,
+        "zip_size": os.path.getsize(zip_path),
+        "enc_size": os.path.getsize(enc_path),
         "aws_archive_id": archive.id,
         "aws_vault_name": archive.vault_name}
     with open(os.path.join(dir_path, RESULT_FILE_NAME), 'w') as result_file:
