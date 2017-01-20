@@ -10,10 +10,16 @@ def upload_file(file_path, aws_key, aws_secret, aws_region, aws_glacier_vault):
     return __upload_file(resource, file_path, aws_glacier_vault)
 
 
-def retrieve_archive(archive_id, aws_key, aws_secret, aws_region, aws_glacier_vault):
+def initiate_archive_retrieval(archive_id, aws_key, aws_secret, aws_region, aws_glacier_vault):
     resource = __create_glacier_resource(aws_key, aws_secret, aws_region)
     archive = resource.Archive('-', aws_glacier_vault, archive_id)
     print "JOB_ID: {}".format(archive.initiate_archive_retrieval())
+
+
+def get_job(job_id, aws_key, aws_secret, aws_region, aws_glacier_vault):
+    resource = __create_glacier_resource(aws_key, aws_secret, aws_region)
+    job = resource.Job('-', aws_glacier_vault, job_id)
+    print "JOB STATUS: {}".format(job.status_code)
 
 
 def __create_glacier_client(aws_key, aws_secret, aws_region):
