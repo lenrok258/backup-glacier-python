@@ -80,13 +80,13 @@ def __upload_files(archive_enc_list, aws_key, aws_secret, aws_region, aws_glacie
         enc_path = archive_enc.enc_path
 
         print "About to upload file [{}]".format(enc_path)
-        archive_id = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
-        print "File uploaded. Archive id = {}".format(archive_id)
+        archive = aws_glacier.upload_file(enc_path, aws_key, aws_secret, aws_region, aws_glacier_vault)
+        print "File uploaded. Archive = {}".format(archive)
         print "About to put result file in directory {}".format(dir_path)
-        __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archive_id)
+        __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archive)
 
 
-def __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archive_id):
+def __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archive):
     zip_hash = file_hash.hash_file(zip_path)
     enc_hash = file_hash.hash_file(enc_path)
     file_content = {
@@ -96,7 +96,8 @@ def __mark_directory_as_completed(dir_name, dir_path, zip_path, enc_path, archiv
         "enc_path": enc_path,
         "zip_hash": zip_hash,
         "enc_hash": enc_hash,
-        "aws_archive_id": archive_id}
+        "aws_archive_id": archive.id,
+        "aws_vault_name": archive.vault_name}
     with open(os.path.join(dir_path, RESULT_FILE_NAME), 'w') as result_file:
         json.dump(file_content, result_file, indent=4)
     with open(os.path.join(OUTPUT_DIR_AWS_ARCHIVES_IDS, dir_name + '.json', ), 'w') as result_file:
@@ -110,5 +111,3 @@ def __delete_output_dir(output_directory):
 
 if __name__ == '__main__':
     main()
-
-1

@@ -1,3 +1,2 @@
-boto3
-boto
-pycrypto
+boto3==1.4.4
+pycrypto==2.6.1
