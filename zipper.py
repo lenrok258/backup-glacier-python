@@ -28,7 +28,7 @@ def __compute_zip_path(dir_name, output_dir):
 
 def __create_zip(path_to_backup, zip_file_path):
     print "About to zip directory: [{}]".format(path_to_backup)
-    with ZipFile(zip_file_path, 'w') as zip_file:
+    with ZipFile(zip_file_path, 'w', allowZip64=True) as zip_file:
         for root, dirs, files in os.walk(path_to_backup):
             for file in files:
                 zip_file.write(os.path.join(root, file))
