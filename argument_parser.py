@@ -1,5 +1,4 @@
 import argparse
-import getpass
 import re
 
 
@@ -28,9 +27,9 @@ class ArgumentParser:
         self.__ask_for_secrets()
 
     def __ask_for_secrets(self):
-        aws_key = getpass.getpass(ArgumentName.AWS_ACCESS_KEY_ID + ": ")
-        aws_secret = getpass.getpass(ArgumentName.AWS_SECRET_ACCESS_KEY + ": ")
-        enc_pass = getpass.getpass(ArgumentName.encryption_password + ": ")
+        aws_key = raw_input(ArgumentName.AWS_ACCESS_KEY_ID + ": ")
+        aws_secret = raw_input(ArgumentName.AWS_SECRET_ACCESS_KEY + ": ")
+        enc_pass = raw_input(ArgumentName.encryption_password + ": ")
 
         setattr(self, ArgumentName.AWS_ACCESS_KEY_ID, aws_key)
         setattr(self, ArgumentName.AWS_SECRET_ACCESS_KEY, aws_secret)
